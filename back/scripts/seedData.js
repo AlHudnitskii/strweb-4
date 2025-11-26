@@ -11,16 +11,15 @@ dotenv.config();
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/online_shop";
 
 const seedData = async () => {
-  try {
     await mongoose.connect(MONGODB_URI);
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     await User.deleteMany({});
     await Product.deleteMany({});
     await Category.deleteMany({});
     await Order.deleteMany({});
     await Cart.deleteMany({});
-    console.log("🗑️  Old data deleted");
+    console.log("Old data deleted");
 
     const adminUser = await User.create({
       username: "admin",
@@ -36,7 +35,7 @@ const seedData = async () => {
       role: "user",
     });
 
-    console.log("👤 Users created");
+    console.log("Users created");
 
     const electronicsCategory = await Category.create({
       name: "Electronics",
@@ -73,7 +72,7 @@ const seedData = async () => {
       order: 5,
     });
 
-    console.log("📂 Categories created");
+    console.log("Categories created");
 
     const products = await Product.create([
       {
@@ -261,7 +260,7 @@ const seedData = async () => {
       },
     ]);
 
-    console.log(`📦 Created ${products.length} products`);
+    console.log(`Created ${products.length} products`);
 
     const order = await Order.create({
       user: regularUser._id,
@@ -300,7 +299,6 @@ const seedData = async () => {
       status: "processing",
     });
 
-    console.log(`Created order: ${order.orderNumber}`);
 
     const cart = await Cart.create({
       user: regularUser._id,
@@ -312,27 +310,8 @@ const seedData = async () => {
         },
       ],
     });
-
-    console.log(`🛍️  Created cart for user`);
-
-    console.log("\n✅ All data created successfully!");
-    console.log("\n📊 Statistics:");
-    console.log(`   Users: ${await User.countDocuments()}`);
-    console.log(`   Categories: ${await Category.countDocuments()}`);
-    console.log(`   Products: ${await Product.countDocuments()}`);
-    console.log(`   Orders: ${await Order.countDocuments()}`);
-    console.log(`   Carts: ${await Cart.countDocuments()}`);
-    
-    console.log("\n🔐 Test credentials:");
-    console.log("   Admin: admin / admin123");
-    console.log("   User: user / user123");
-
     await mongoose.connection.close();
-    console.log("\n👋 Disconnected from MongoDB");
-  } catch (error) {
-    console.error("❌ Error:", error);
-    process.exit(1);
-  }
+
 };
 
 seedData();

@@ -112,7 +112,9 @@ cartSchema.methods.calculateTotals = function() {
 
 cartSchema.pre("save", function(next) {
   this.calculateTotals();
-  next();
+  if (typeof next === 'function') {
+        next();
+    } 
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

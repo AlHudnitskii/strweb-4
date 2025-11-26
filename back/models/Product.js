@@ -129,14 +129,16 @@ productSchema.methods.updateStockStatus = function() {
 };
 
 productSchema.pre("save", function(next) {
-  if (this.isModified("stock")) {
-    if (this.stock === 0 && this.status === "active") {
-      this.status = "out_of_stock";
-    } else if (this.stock > 0 && this.status === "out_of_stock") {
-      this.status = "active";
+    if (this.isModified("stock")) {
+        if (this.stock === 0 && this.status === "active") {
+            this.status = "out_of_stock";
+        } else if (this.stock > 0 && this.status === "out_of_stock") {
+            this.status = "active";
+        }
     }
-  }
-  next();
+    if (typeof next === 'function') {
+        next();
+    } 
 });
 
 const Product = mongoose.model("Product", productSchema);

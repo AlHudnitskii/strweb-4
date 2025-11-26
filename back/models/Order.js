@@ -62,7 +62,6 @@ const orderSchema = new mongoose.Schema({
     },
     orderNumber: {
         type: String,
-        required: true,
     },
     items: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
@@ -130,7 +129,9 @@ orderSchema.pre("save", function (next) {
     this.orderNumber = `ORD-${datePart}-${randomPart}`;
   }
 
-  next();
+  if (typeof next === 'function') {
+        next();
+    } 
 });
 
 orderSchema.index({ user: 1 });
