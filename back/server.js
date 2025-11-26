@@ -5,17 +5,11 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const session = require("express-session");
 const morgan = require("morgan");
-const userRoutes = require("./routes/userRoutes");
-const googleAuthRoutes = require("./routes/googleAuth");
-const clientRoutes = require("./routes/clientRoutes");
-const newsRoutes = require("./routes/newsRoutes");
-const propertyRoutes = require("./routes/propertyRoutes");
 const authenticateToken = require("./middleware/authMiddleware");
 const { swaggerUi, swaggerDocs } = require("./swagger");
 
 dotenv.config();
 
-require("./config/passport")(passport);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -40,14 +34,6 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use("/api/users", userRoutes);
-app.use("/auth", googleAuthRoutes);
-app.use("/api/clients", clientRoutes);
-app.use("/api/news", newsRoutes);
-app.use("/api/properties", propertyRoutes);
 
 app.get(
   "/auth/google/callback",
