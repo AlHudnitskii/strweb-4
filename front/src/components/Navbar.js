@@ -1,12 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import axiosInstance from "../axiosInstance";
-import TimeZoneInfo from "./TimeZoneInfo";
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -50,22 +57,32 @@ function Navbar() {
           </>
         )}
         <li className="nav-item">
+          <Link to="/catalog" className="nav-link">
+            Каталог
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/cart" className="nav-link">
+            Корзина
+          </Link>
+        </li>
+        {user && (
+          <li className="nav-item">
+            <Link to="/orders" className="nav-link">
+              Мои заказы
+            </Link>
+          </li>
+        )}
+        <li className="nav-item">
           <Link to="/clients" className="nav-link">
             Клиенты
           </Link>
         </li>
-        <li className="nav-item">
-          <Link to="/news" className="nav-link">
-            Новости
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/properties" className="nav-link">
-            Недвижимость
-          </Link>
-        </li>
       </ul>
-      <TimeZoneInfo />
+      <div className="timezone-info-compact">
+        <span>{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
+        <span>{currentTime.toLocaleTimeString('ru-RU')}</span>
+      </div>
     </nav>
   );
 }
