@@ -62,4 +62,9 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
     }
 );
 
+// Роут для выхода (для JWT токенов logout делается на клиенте, но роут нужен для совместимости)
+router.get("/logout", (req, res) => {
+    res.json({ message: "Logged out successfully" });
+});
+
 module.exports = router;

@@ -1,24 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../axiosInstance";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/users/register", {
+      const response = await axiosInstance.post("/api/auth/register", {
         username,
         password,
+        email,
       });
       alert("Регистрация успешна! Теперь вы можете войти.");
       navigate("/login");
     } catch (error) {
       console.error("Ошибка регистрации:", error.response?.data || error.message);
-      alert("Ошибка регистрации");
+      alert(error.response?.data?.message || "Ошибка регистрации");
     }
   };
 
@@ -34,11 +36,18 @@ function RegisterPage() {
           required
         />
         <input
+          type="email"
+          placeholder="Email (опционально)"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
           type="password"
-          placeholder="Пароль"
+          placeholder="Пароль (минимум 6 символов)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength={6}
         />
         <input type="submit" value="Зарегистрироваться" />
       </form>

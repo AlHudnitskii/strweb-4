@@ -18,11 +18,17 @@ import ViewPropertyPage from "./components/ViewPropertyPage";
 import CatImage from "./components/CatImage";
 import DogImage from "./components/DogImage";
 import DemonstrationPage from "./components/DemonstrationPage";
+import ProductsCatalogPage from "./components/ProductsCatalogPage";
+import ProductDetailPage from "./components/ProductDetailPage";
+import CartPage from "./components/CartPage";
+import OrdersPage from "./components/OrdersPage";
+import CheckoutPage from "./components/CheckoutPage";
+import TimeZoneInfo from "./components/TimeZoneInfo";
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   useEffect(() => {
     const parsed = queryString.parse(window.location.search);
@@ -70,6 +76,33 @@ function App() {
           }
         />
         <Route path="/auth/logout" element={<LogoutPage />} />
+        <Route path="/catalog" element={<ProductsCatalogPage />} />
+        <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route
+          path="/cart"
+          element={
+            <PrivateRoute>
+              <CartPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PrivateRoute>
+              <OrdersPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <PrivateRoute>
+              <CheckoutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/timezone" element={<TimeZoneInfo />} />
       </Routes>
     </div>
   );

@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import axiosInstance from "../axiosInstance";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -13,30 +12,33 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/users/login",
-        {
-          username,
-          password,
-        },
-        { withCredentials: true },
-      );
-      const token = response.data.token;
+      const response = await axiosInstance.post("/api/auth/login", {
+        username,
+        password,
+      });
+
+      const { token, user } = response.data;
 
       localStorage.setItem("token", token);
 
-      const decoded = jwtDecode(token);
-      login({ username: decoded.username, id: decoded.id });
+      login({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      });
 
       navigate("/clients");
     } catch (error) {
       console.error("Ошибка авторизации:", error.response?.data || error.message);
-      alert("Неверные учетные данные");
+      alert(error.response?.data?.message || "Ошибка авторизации");
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    // Используем относительный путь или полный URL из переменной окружения
+    const backendUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (
@@ -59,6 +61,7 @@ function LoginPage() {
         />
         <input type="submit" value="Войти" />
       </form>
+
       <button onClick={handleGoogleLogin} className="google-button">
         Войти через Google
       </button>

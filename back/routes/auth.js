@@ -21,7 +21,7 @@ router.post("/register", async (req, res) => {
             return res.status(400).json({ message: "Username already taken" });
         }
 
-        const user = new User.create({ username, email, password });
+        const user = await User.create({ username, email, password });
 
         res.status(201).json({ 
             message: "User registered successfully",
