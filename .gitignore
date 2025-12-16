@@ -2,3 +2,5 @@ database.sqlite/
 front/package-lock.json
 
 node_modules/
+.env
+back/.env
